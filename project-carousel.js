@@ -252,15 +252,24 @@
       // Apply transform to track
       track.style.transform = `translate3d(${currentX.toFixed(1)}px, 0, 0)`;
 
-      // Calculate dynamic speed for 3D tilt & card skew (only when moving)
+      // Calculate dynamic speed for 3D tilt & card skew (only during active drag or high-velocity fling)
       const frameSpeed = (targetX - currentX);
-      const tiltAngle = Math.max(-3.5, Math.min(3.5, frameSpeed * 0.045));
-      const scaleDown = Math.max(0.985, 1 - Math.abs(frameSpeed) * 0.00035);
+      const isHighVelocity = isDragging || Math.abs(frameSpeed) > 1.2;
 
-      if (isDragging || Math.abs(tiltAngle - lastTiltAngle) > 0.05 || Math.abs(frameSpeed) > 0.1) {
-        lastTiltAngle = tiltAngle;
+      if (isHighVelocity) {
+        const tiltAngle = Math.max(-3.5, Math.min(3.5, frameSpeed * 0.045));
+        const scaleDown = Math.max(0.985, 1 - Math.abs(frameSpeed) * 0.00035);
+        if (Math.abs(tiltAngle - lastTiltAngle) > 0.02) {
+          lastTiltAngle = tiltAngle;
+          for (let i = 0; i < allCards.length; i++) {
+            allCards[i].style.transform = `perspective(1000px) rotateY(${tiltAngle.toFixed(2)}deg) scale(${scaleDown.toFixed(3)})`;
+          }
+        }
+      } else if (lastTiltAngle !== 0) {
+        // Reset card tilt back to neutral once
+        lastTiltAngle = 0;
         for (let i = 0; i < allCards.length; i++) {
-          allCards[i].style.transform = `perspective(1000px) rotateY(${tiltAngle.toFixed(2)}deg) scale(${scaleDown.toFixed(3)})`;
+          allCards[i].style.transform = '';
         }
       }
 

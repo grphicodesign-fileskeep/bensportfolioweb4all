@@ -70,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   window.addEventListener('pointerdown', unlockAudio, { once: true });
   window.addEventListener('keydown', unlockAudio, { once: true });
-  preloadAudioBuffers();
 
   function playSound(type = 'click', volume = 0.5) {
     if (!audioEnabled) return;
@@ -471,6 +470,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const prefetchedUrls = new Set();
     function prefetchUrl(url) {
       if (!url || prefetchedUrls.has(url) || url.startsWith('#') || url.startsWith('javascript:')) return;
+      const cleanUrl = url.split('?')[0].toLowerCase();
+      if (cleanUrl.endsWith('.mp4') || cleanUrl.endsWith('.webm') || cleanUrl.endsWith('.pdf') || cleanUrl.endsWith('.zip') || cleanUrl.endsWith('.mp3')) return;
       prefetchedUrls.add(url);
       const link = document.createElement('link');
       link.rel = 'prefetch';
@@ -889,7 +890,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const tabContents = {
     spatial: `
-      <video src="FIVER AD FINAL.mp4" autoplay loop muted playsinline class="hero-stage-video" id="heroVideoPlayer"></video>
+      <video src="FIVER AD FINAL.mp4" poster="assets/graphico-web-engine.jpg" preload="none" loop muted playsinline class="hero-stage-video" id="heroVideoPlayer"></video>
       <div class="video-live-badge">
         <span class="live-dot"></span>
         <span>4K VIDEO PRESENTATION</span>
@@ -1074,33 +1075,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (heroVideo) {
     heroVideo.muted = true;
-    
-    const playHeroVideo = () => {
+    let videoSourcesLoaded = false;
+
+    const loadAndPlayHeroVideo = () => {
+      if (!videoSourcesLoaded) {
+        const sources = heroVideo.querySelectorAll('source');
+        let needsLoad = false;
+        sources.forEach(src => {
+          if (src.dataset.src && !src.getAttribute('src')) {
+            src.src = src.dataset.src;
+            needsLoad = true;
+          }
+        });
+        if (needsLoad) {
+          heroVideo.load();
+        }
+        videoSourcesLoaded = true;
+      }
+
       const playPromise = heroVideo.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Autoplay policy fallback: keep muted and retry on user interaction
-        });
+        playPromise.catch(() => {});
       }
     };
 
-    playHeroVideo();
-    document.addEventListener('touchstart', playHeroVideo, { once: true });
-    document.addEventListener('click', playHeroVideo, { once: true });
-
-    // Intersection observer for video playback state
+    // Lazy load video stream with 300px lookahead margin & pause when offscreen
     if ('IntersectionObserver' in window) {
       const videoObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            playHeroVideo();
+            loadAndPlayHeroVideo();
           } else {
-            heroVideo.pause();
+            if (videoSourcesLoaded) {
+              heroVideo.pause();
+            }
           }
         });
-      }, { threshold: 0.15 });
+      }, { rootMargin: '300px 0px', threshold: 0.08 });
 
       videoObserver.observe(heroVideo);
+    } else {
+      loadAndPlayHeroVideo();
     }
 
     if (videoSoundBtn) {
@@ -1218,6 +1233,21 @@ document.addEventListener('DOMContentLoaded', () => {
       window.addEventListener('resize', () => {
         allTweens.forEach(t => t.invalidate());
       });
+
+      // Viewport Optimization: only tick GSAP marquee tweens when section is visible
+      const testimonialsSection = document.getElementById('testimonials') || rowTop.closest('section');
+      if (testimonialsSection && 'IntersectionObserver' in window) {
+        const storiesObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              allTweens.forEach(t => t.play());
+            } else {
+              allTweens.forEach(t => t.pause());
+            }
+          });
+        }, { threshold: 0.05 });
+        storiesObserver.observe(testimonialsSection);
+      }
     });
   }
 

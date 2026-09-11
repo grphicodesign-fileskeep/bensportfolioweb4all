@@ -61,12 +61,12 @@
       Vector
     } = Matter;
 
-    // 1. High-Fidelity Physics Engine
+    // 1. High-Fidelity Physics Engine (Optimized iterations for 60fps/120fps smoothness)
     const engine = Engine.create({
       enableSleeping: false,
-      constraintIterations: 8,
-      positionIterations: 16,
-      velocityIterations: 16
+      constraintIterations: 2,
+      positionIterations: 6,
+      velocityIterations: 4
     });
 
     engine.world.gravity.x = 0;

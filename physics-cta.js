@@ -218,9 +218,11 @@
       canvas.addEventListener('pointerup', handlePointerUp);
       canvas.addEventListener('pointercancel', handlePointerUp);
 
-      // Start Runner
+      // Start Runner only if currently visible
       runner = Runner.create();
-      Runner.run(runner, engine);
+      if (isCtaVisible) {
+        Runner.run(runner, engine);
+      }
 
       // Render Loop
       function renderLoop() {

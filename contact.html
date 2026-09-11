@@ -33,14 +33,25 @@
     /* Universal Page & Environment Background: Sky-Blue Blueprint across Entire Page & Behind Footer */
     html, body {
       background-color: #A3D2FA !important;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background-color: #A3D2FA;
       background-image: 
         linear-gradient(to right, rgba(10, 61, 98, 0.08) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(10, 61, 98, 0.08) 1px, transparent 1px),
-        linear-gradient(135deg, #E8F0F8 0%, #BFE0FF 50%, #82C3FF 100%) !important;
-      background-size: 36px 36px, 36px 36px, 100% 100% !important;
-      background-position: center center !important;
-      background-attachment: fixed !important;
-      min-height: 100vh;
+        linear-gradient(135deg, #E8F0F8 0%, #BFE0FF 50%, #82C3FF 100%);
+      background-size: 36px 36px, 36px 36px, 100% 100%;
+      background-position: center center;
+      transform: translateZ(0);
+      will-change: transform;
     }
 
     /* Section Background: Soft Sky-Blue Blueprint Environment with Blue Glow */

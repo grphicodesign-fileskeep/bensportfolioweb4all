@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <!-- High-DPI Favicon & Web App Touch Icons -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="BENYAMIN">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#0B0B0E">
+
+  <title>Case Study: Ocean Breeze Resort — Website Design, Luxury Posters &amp; Automation — Benyamin Namtalashvili</title>
+  <meta name="description" content="In-Process Case Study: Comprehensive web design, luxury architectural promotional posters, and Google Sheets booking automations for Ocean Breeze Resort in San Juan, La Union."/>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="styles.css?v=2.2.0"/>
+
+  <style>
+    /* In-Progress Dedicated Visual Styles */
+    .in-progress-pill {
+      background: rgba(242, 91, 14, 0.09) !important;
+      border: 1px solid rgba(242, 91, 14, 0.38) !important;
+      color: #F25B0E !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.95rem;
+      border-radius: 9999px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .status-pulsar-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #F25B0E;
+      box-shadow: 0 0 10px #F25B0E;
+      display: inline-block;
+      animation: statusPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes statusPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.45); opacity: 0.6; }
+    }
+
+    .production-phase-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin: 0.75rem 0 0.35rem;
+    }
+
+    .production-phase-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #F25B0E, #FF8C00);
+      border-radius: 9999px;
+      transition: width 1s ease-out;
+    }
+
+    .wip-callout-card {
+      background: linear-gradient(135deg, rgba(255, 245, 235, 0.95), rgba(255, 255, 255, 0.98));
+      border: 1.5px dashed rgba(242, 91, 14, 0.35);
+      border-radius: 20px;
+      padding: 1.5rem 1.8rem;
+      margin: 2.2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wip-callout-card::before {
+      content: "ACTIVE BUILD";
+      position: absolute;
+      top: 12px;
+      right: -24px;
+      background: #F25B0E;
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 3px 28px;
+      transform: rotate(45deg);
+      box-shadow: 0 2px 6px rgba(242, 91, 14, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow -->
+  <div id="ambientGlow"></div>
+
+  <!-- Dynamic Island Navigation -->
+  <nav id="nav" role="navigation" aria-label="Main Navigation">
+    <div class="nav-island">
+      <a href="index.html" class="nav-brand" aria-label="Benyamin Namtalashvili Portfolio Home">
+        Benyamin Namtalashvili
+      </a>
+      <ul class="nav-links-wrap" role="list">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="portfolio.html" class="active">Works &amp; Case Studies</a></li>
+        <li><a href="about.html">About &amp; Resume</a></li>
+      </ul>
+      <div class="nav-status-pill">
+        <span class="status-dot"></span>
+        <span>Available for Hire</span>
+      </div>
+      <button id="audioToggleBtn" class="nav-audio-toggle" title="Toggle Sound Effects">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+      <a href="contact.html" class="nav-cta-btn magnetic-3d">
+        <span>Get in Touch</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- CASE STUDY HERO SHOWCASE STAGE -->
+  <header class="case-study-hero-stage">
+    <div class="case-study-container">
+      <div class="case-study-breadcrumb">
+        <a href="portfolio.html" class="breadcrumb-back-link">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Case Studies</span>
+        </a>
+        <span style="color:var(--ink-tertiary);">/</span>
+        <span style="font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-secondary); font-weight:600;">Hospitality Web Platform &amp; Print Collateral</span>
+      </div>
+
+      <!-- In Process Status Pill -->
+      <div class="in-progress-pill" style="margin-bottom:1.35rem;">
+        <span class="status-pulsar-dot"></span>
+        <span>IN PROCESS // ACTIVE PRODUCTION</span>
+        <span style="opacity:0.4;">|</span>
+        <span style="color:var(--ink-primary);">Milestone Phase 04 / 05</span>
+      </div>
+
+      <h1 class="hero-title" style="max-width: 1040px;">
+        Ocean Breeze Resort: <span class="serif-italic">Long-Stay Web Platform</span> &amp; Architectural Poster Campaign
+      </h1>
+      <p class="hero-lead" style="max-width: 880px; margin: 0 0 1.75rem;">
+        End-to-end hospitality transformation for San Juan, La Union's premier coastal sanctuary: bridging tactile fine-art print posters, responsive digital booking experiences, and serverless Google Sheets workflow automation.
+      </p>
+
+      <!-- Bento Specs Grid -->
+      <div class="case-study-spec-bento">
+        <div class="case-study-spec-item">
+          <div class="case-study-spec-title">Project</div>
+          <div class="case-study-spec-value">Web Design, Posters &amp; Automations</div>
+        </div>
+        <div class="case-study-spec-item">
+          <div class="case-study-spec-title">Status</div>
+          <div class="case-study-spec-value" style="color: #F25B0E; font-weight: 700;">
+            <i class="fa-solid fa-spinner fa-spin" style="margin-right: 4px; font-size: 0.85em;"></i> In Process (78%)
+          </div>
+        </div>
+        <div class="case-study-spec-item">
+          <div class="case-study-spec-title">Role</div>
+          <div class="case-study-spec-value">Lead Product Designer &amp; Dev</div>
+        </div>
+        <div class="case-study-spec-item">
+          <div class="case-study-spec-title">Location / Target</div>
+          <div class="case-study-spec-value" style="color: #10B981;">San Juan, La Union, PH</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CASE STUDY CONTENT BODY -->
+  <main style="padding: 5rem 0 8rem; background: var(--canvas-pure);">
+    <div class="case-study-container">
+      
+      <!-- HERO SHOWCASE: WEB PLATFORM ON LUXURY DISPLAY -->
+      <div class="case-study-photo-card" style="margin-bottom: 2.5rem;">
+        <img src="assets/ocean-breeze-web.jpg" alt="Ocean Breeze Resort Luxury Long-Stay Coastal Sanctuary Website Design on Minimalist Desktop Display" data-caption="Ocean Breeze Resort — Long-Stay Coastal Sanctuary Responsive Web Platform on Modern Studio Display" style="width: 100%; height: auto; display: block;"/>
+      </div>
+
+      <!-- Live WIP Notice Box -->
+      <div class="wip-callout-card">
+        <div style="display:flex; align-items:flex-start; gap:1rem;">
+          <div style="width:38px; height:38px; border-radius:12px; background:rgba(242, 91, 14, 0.12); color:#F25B0E; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">
+            <i class="fa-solid fa-compass-drafting"></i>
+          </div>
+          <div>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin:0 0 0.35rem;">
+              Work-In-Progress Production Snapshot
+            </h4>
+            <p style="font-size:0.88rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              This engagement is currently active in Phase 4. Visual brand identity, editorial promotional posters, and front-end interface architectures are finalized. The team is currently conducting end-to-end integration tests on the zero-cost Google Sheets backend, Apps Script Webhooks, and direct SMS/Messenger confirmation relays.
+            </p>
+            <div class="production-phase-bar">
+              <div class="production-phase-fill" style="width: 78%;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-tertiary); margin-top:0.4rem;">
+              <span>Phases 1–3 Complete (Design &amp; Front-End)</span>
+              <span style="color:#F25B0E; font-weight:700;">78% Ready</span>
+              <span>Final Sync Deployment</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Performance Metrics Grid -->
+      <div class="case-study-metrics-grid">
+        <div class="case-study-metric-card">
+          <div class="case-study-metric-number" style="color: #F25B0E;">78%</div>
+          <div class="case-study-metric-label">Active Sprint Progress</div>
+          <div class="case-study-metric-desc">Visual identity, UI components, and posters locked; webhooks in final staging.</div>
+        </div>
+        <div class="case-study-metric-card">
+          <div class="case-study-metric-number" style="color: #10B981;">300 DPI</div>
+          <div class="case-study-metric-label">Fine-Art Poster Assets</div>
+          <div class="case-study-metric-desc">Museum-grade promotional print layouts calibrated for large-format physical installation.</div>
+        </div>
+        <div class="case-study-metric-card">
+          <div class="case-study-metric-number" style="color: #6366F1;">0-Cost</div>
+          <div class="case-study-metric-label">Serverless Database</div>
+          <div class="case-study-metric-desc">Google Sheets API integration eliminating costly third-party monthly SaaS fees.</div>
+        </div>
+        <div class="case-study-metric-card">
+          <div class="case-study-metric-number" style="color: #0071E3;">100%</div>
+          <div class="case-study-metric-label">Mobile-First Fluidity</div>
+          <div class="case-study-metric-desc">Ultra-smooth responsive performance engineered with Vite, React 19, and Tailwind.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 1: THE CHALLENGE -->
+      <div class="case-study-section-card">
+        <div class="case-study-section-badge">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>The Challenge</span>
+        </div>
+        <h2 class="case-study-heading">
+          Repositioning La Union Hospitality: From Weekend Surfers to High-Value Long-Stay Nomads
+        </h2>
+        <p class="case-study-paragraph">
+          San Juan, La Union has traditionally been seen as a weekend party and surfing getaway. Ocean Breeze Resort sought to redefine this paradigm by positioning itself as an exclusive, design-led <strong>long-stay sanctuary</strong> catered to remote executives, creative digital nomads, and wellness seekers seeking weekly and monthly beachfront residencies.
+        </p>
+        <p class="case-study-paragraph">
+          The challenge required solving two distinct problems simultaneously: creating a sophisticated, editorial brand identity with luxury physical posters that inspire travelers to stay longer, paired with a custom web application capable of handling complex reservation workflows without saddling the owner with expensive hotel software subscription fees.
+        </p>
+
+        <div class="system-flow-grid">
+          <div class="system-flow-card">
+            <span class="flow-step-num">Challenge 01</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Perception &amp; Positioning</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Overcoming the transient, crowded budget-hostel aesthetic prevalent across surf towns by introducing an elevated architectural and minimalist editorial visual narrative.
+            </p>
+          </div>
+          <div class="system-flow-card">
+            <span class="flow-step-num">Challenge 02</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Zero-Overhead Automation</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Architecting a custom reservation database connecting directly to Google Sheets and Apps Script, eliminating $150+/month property management subscriptions while offering real-time date verification.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: LUXURY ARCHITECTURAL POSTER CAMPAIGN -->
+      <div class="case-study-section-card">
+        <div class="case-study-section-badge">
+          <i class="fa-solid fa-palette"></i>
+          <span>Print Advertising Campaign</span>
+        </div>
+        <h2 class="case-study-heading">
+          Architectural Fine-Art Posters: Celebrating Coastal Serenity &amp; Modern Surf Culture
+        </h2>
+        <p class="case-study-paragraph">
+          To build physical brand presence across regional airports, boutique coffee shops, and resort galleries, I developed a collection of luxury promotional posters. Designed with Swiss-style typographic discipline, high-contrast serif headlines, and cinematic natural photography, the posters celebrate both the legendary Pacific golden hour and the resort's brutalist-tropical architectural elegance.
+        </p>
+
+        <!-- Matched 2-Column Poster Gallery -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.25rem; margin-top: 2.25rem;">
+          
+          <!-- Poster 1: Sunset Sanctuary -->
+          <div class="case-study-photo-card">
+            <img src="assets/ocean-breeze-poster-sunset.jpg" alt="Ocean Breeze Resort Sunset Sanctuary Gallery Framed Travel Poster" data-caption="Ocean Breeze Resort — Long-Stay Coastal Sanctuary Gallery Poster (Sunset Edition)" loading="lazy"/>
+          </div>
+
+          <!-- Poster 2: Surf & Serenity Architectural -->
+          <div class="case-study-photo-card">
+            <img src="assets/ocean-breeze-poster-surf.jpg" alt="Ocean Breeze Resort Surf & Serenity Modern Architecture Gallery Framed Poster" data-caption="Ocean Breeze Resort — Surf & Serenity Architectural Print Campaign" loading="lazy"/>
+          </div>
+
+        </div>
+
+        <div class="system-flow-grid" style="margin-top: 2rem;">
+          <div class="system-flow-card">
+            <span class="flow-step-num">Print Spec 01</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Typographic Hierarchy</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Pairing refined classical display serifs with crisp, open-tracking geometric sans for timeless legibility from distance in hospitality lobbies and galleries.
+            </p>
+          </div>
+          <div class="system-flow-card">
+            <span class="flow-step-num">Print Spec 02</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Museum-Grade Calibration</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              CMYK color spaces with deep contrast ratios calibrated for archival textured cotton paper and minimalist matte black aluminum framing.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: BRAND IDENTITY & GUIDELINES BOARD -->
+      <div class="case-study-section-card">
+        <div class="case-study-section-badge">
+          <i class="fa-solid fa-swatchbook"></i>
+          <span>Brand Identity System</span>
+        </div>
+        <h2 class="case-study-heading">
+          Natural Color Harmony &amp; Tactile Brand Touchpoints
+        </h2>
+        <p class="case-study-paragraph">
+          The brand identity palette draws inspiration from the natural elements of the San Juan coast: sunset terracotta, sun-bleached sand cream, deep Philippine sea navy, and coastal jade. The visual language extends into tactile stationery, blind-embossed stationery envelopes, business cards, and a cohesive mobile digital identity.
+        </p>
+
+        <!-- Brand Identity Showcase Board -->
+        <div class="case-study-photo-card" style="margin: 2.25rem 0 1.25rem;">
+          <img src="assets/ocean-breeze-brand-board.jpg" alt="Ocean Breeze Resort Brand Identity Guidelines Board with Color Swatches and Stationery" data-caption="Ocean Breeze Resort — Brand Guidelines, Color Swatches & Mobile Touchpoint Board" style="width: 100%; height: auto; display: block;"/>
+        </div>
+
+        <div class="system-flow-grid" style="margin-top: 1.75rem;">
+          <div class="system-flow-card">
+            <span class="flow-step-num">Color Token 01</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Terracotta Orange (#F25B0E)</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Infused into primary action buttons, status accents, and sunset visual cues to inspire warmth and hospitality vitality.
+            </p>
+          </div>
+          <div class="system-flow-card">
+            <span class="flow-step-num">Color Token 02</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Warm Sand Cream (#FAF5EA)</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Acts as the foundational background canvas, replacing harsh digital white with organic, calming beach resort texture.
+            </p>
+          </div>
+          <div class="system-flow-card">
+            <span class="flow-step-num">Color Token 03</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Deep Navy &amp; Charcoal (#0F172A)</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Supplies razor-sharp typographic contrast, luxury glassmorphic card overlays, and high-impact structural borders.
+            </p>
+          </div>
+          <div class="system-flow-card">
+            <span class="flow-step-num">Color Token 04</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Coastal Jade Accents</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Represents coastal flora, tropical gardens, and the pristine surf waters of Northern Luzon.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: WEB PLATFORM & BOOKING ENGINE ARCHITECTURE -->
+      <div class="case-study-section-card">
+        <div class="case-study-section-badge">
+          <i class="fa-solid fa-code"></i>
+          <span>Web Platform Engineering</span>
+        </div>
+        <h2 class="case-study-heading">
+          Full-Stack Web Experience: High-Speed Vite, Motion &amp; Real-Time Booking Verification
+        </h2>
+        <p class="case-study-paragraph">
+          The Ocean Breeze Resort digital portal was developed using modern React 19, TypeScript, Vite, and Motion. The application features zero page reloads, fluid view transitions, and dedicated sections covering Accommodations, Long-Stay Lifestyle Amenities, Guest Story Archives, Interactive Google Maps turn-by-turn routing, and an intelligent date-check reservation engine.
+        </p>
+
+        <div class="system-flow-grid" style="margin-top: 2rem;">
+          <div class="system-flow-card">
+            <span class="flow-step-num">Feature 01</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Interactive Calendar Date Lock</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              The booking modal performs live availability queries directly against the master spreadsheet, visually slashing out booked dates and preventing double bookings in real time.
+            </p>
+          </div>
+          <div class="system-flow-card">
+            <span class="flow-step-num">Feature 02</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Turn-by-Turn La Union Navigation</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Direct GPS deep-linking launching Google Maps, Waze, or Apple Maps with single-click arrival coordinates at Urbiztondo, San Juan.
+            </p>
+          </div>
+          <div class="system-flow-card">
+            <span class="flow-step-num">Feature 03</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Offloaded Web Worker Sanitization</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Input sanitization and payload formatting are handled off the main UI thread via background Web Workers, maintaining a butter-smooth 60fps frame rate.
+            </p>
+          </div>
+          <div class="system-flow-card">
+            <span class="flow-step-num">Feature 04</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Long-Stay Pricing Engine</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Intelligent tier calculations applying automated 15% weekly and 30% monthly stay discounts for nomad and extended residency guests.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5: GOOGLE SHEETS AUTOMATION HUB -->
+      <div class="case-study-section-card">
+        <div class="case-study-section-badge">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Automation Infrastructure</span>
+        </div>
+        <h2 class="case-study-heading">
+          Serverless Automation Hub: Google Sheets as a Real-Time Reservation Database
+        </h2>
+        <p class="case-study-paragraph">
+          Rather than forcing the resort management team into complex backends or paying hefty monthly subscriptions to enterprise hotel software, the platform routes bookings into Google Sheets via Google Apps Script Webhooks.
+        </p>
+        <p class="case-study-paragraph">
+          Whenever a guest reserves a room, the webhook sanitizes the submission, logs a formatted row with a unique tracking ID, updates calendar availability, and immediately dispatches multi-channel alerts (via Twilio SMS, Facebook Messenger API, and backup HTML Gmail notices) directly to the resort manager's phone.
+        </p>
+
+        <div class="system-flow-grid" style="margin-top: 2rem;">
+          <div class="system-flow-card">
+            <span class="flow-step-num">Pipeline 01</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Two-Way Sheet Synchronization</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Staff can edit approval states directly in Google Sheets (e.g. changing status to "Confirmed" or "Checked In"), and the live web app reflects updates instantly.
+            </p>
+          </div>
+          <div class="system-flow-card">
+            <span class="flow-step-num">Pipeline 02</span>
+            <h4 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--ink-primary); margin-bottom:0.45rem;">Instant Multi-Channel Alerts</h4>
+            <p style="font-size:0.9rem; color:var(--ink-secondary); line-height:1.55; margin:0;">
+              Direct integration hooks to Twilio SMS and Facebook Messenger Graph API notify the front desk within seconds of reservation dispatch.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6: REMAINING PRODUCTION ROADMAP -->
+      <div class="case-study-section-card">
+        <div class="case-study-section-badge">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Current Roadmap</span>
+        </div>
+        <h2 class="case-study-heading">
+          Remaining Milestones in Active Production
+        </h2>
+        <p class="case-study-paragraph">
+          Below is the live checklist tracking the final sprint items leading up to final client handover and official resort launch:
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 0.85rem; margin-top: 1.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.85rem; padding: 0.95rem 1.25rem; background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 14px;">
+            <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 1.1rem;"></i>
+            <span style="font-family: var(--font-display); font-weight: 600; color: var(--ink-primary); font-size: 0.92rem;">
+              Brand Identity System &amp; Color Guidelines (Complete)
+            </span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.85rem; padding: 0.95rem 1.25rem; background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 14px;">
+            <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 1.1rem;"></i>
+            <span style="font-family: var(--font-display); font-weight: 600; color: var(--ink-primary); font-size: 0.92rem;">
+              Archival Promotional Print Poster Series &amp; Framing Guidelines (Complete)
+            </span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.85rem; padding: 0.95rem 1.25rem; background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 14px;">
+            <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 1.1rem;"></i>
+            <span style="font-family: var(--font-display); font-weight: 600; color: var(--ink-primary); font-size: 0.92rem;">
+              Responsive Multi-Page Website &amp; Long-Stay Accommodations Catalog (Complete)
+            </span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.85rem; padding: 0.95rem 1.25rem; background: rgba(242, 91, 14, 0.08); border: 1px solid rgba(242, 91, 14, 0.35); border-radius: 14px;">
+            <i class="fa-solid fa-spinner fa-spin" style="color: #F25B0E; font-size: 1.1rem;"></i>
+            <span style="font-family: var(--font-display); font-weight: 700; color: #F25B0E; font-size: 0.92rem;">
+              Google Sheets Live Webhook API Binding &amp; Cross-Origin Web App Deployment (Active Testing)
+            </span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.85rem; padding: 0.95rem 1.25rem; background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 14px;">
+            <i class="fa-regular fa-circle" style="color: var(--ink-tertiary); font-size: 1.1rem;"></i>
+            <span style="font-family: var(--font-display); font-weight: 500; color: var(--ink-secondary); font-size: 0.92rem;">
+              Staff Tablet Admin Dashboard &amp; On-Site Check-In Scanner Setup (Pending)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Next / Previous Navigation -->
+      <div class="case-study-pagination">
+        <a href="case-study-crystal-white-claw.html" class="case-study-page-card">
+          <div class="page-card-direction">
+            <i class="fa-solid fa-arrow-left"></i> Previous Case Study
+          </div>
+          <div class="page-card-title">Crystal White Claw Brand Identity &amp; Packaging</div>
+        </a>
+
+        <a href="case-study-ace-galera.html" class="case-study-page-card" style="text-align: right;">
+          <div class="page-card-direction" style="justify-content: flex-end;">
+            Next Case Study <i class="fa-solid fa-arrow-right"></i>
+          </div>
+          <div class="page-card-title">DJ Ace Galera Digital Identity &amp; Booking Platform</div>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FIGMA DESIGNER FRAME FOOTER -->
+  <div class="floating-footer-wrapper">
+    <footer class="floating-dark-footer designer-footer" id="designerFooter">
+      <svg class="footer-topo-pattern" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,100 C320,160 420,-40 720,60 C1020,160 1180,20 1440,80 L1440,600 L0,600 Z" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1.5" />
+        <path d="M0,180 C360,260 480,40 760,150 C1040,260 1200,90 1440,170" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1.5" />
+        <path d="M0,260 C380,340 540,120 800,240 C1060,360 1220,180 1440,250" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1.5" />
+        <path d="M0,340 C400,420 580,200 860,320 C1140,440 1260,260 1440,330" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1.5" />
+        <path d="M0,420 C420,500 640,290 920,400 C1200,510 1300,340 1440,420" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1.5" />
+      </svg>
+      <canvas class="footer-grid-canvas"></canvas>
+
+      <div class="footer-frame-top">
+        <div class="footer-frame-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          <span>BENYAMIN.FRAME</span>
+        </div>
+        <button class="footer-top-btn" id="footerBackToTop" aria-label="Scroll back to top" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="footer-main-content">
+        <div class="footer-left-col">
+          <div class="footer-eyebrow">HAVE AN IDEA WORTH BUILDING?</div>
+          <a href="mailto:benyaminnamtalashvili726@gmail.com" class="footer-giant-email">
+            <span>benyaminnamtalashvili726@gmail.com</span>
+            <span class="footer-email-arrow">↗</span>
+          </a>
+          <div class="footer-cta-action-row">
+            <div class="footer-avail-pill">
+              <span class="avail-dot"></span>
+              <span>available for projects</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-nav-cols">
+          <div class="footer-nav-col">
+            <div class="footer-nav-heading">STUDIO</div>
+            <ul class="footer-nav-items">
+              <li><a href="index.html">Overview</a></li>
+              <li><a href="portfolio.html">Works &amp; Case Studies</a></li>
+              <li><a href="about.html">About &amp; Resume</a></li>
+              <li><a href="contact.html">Get in Touch</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-nav-col">
+            <div class="footer-nav-heading">CONNECT</div>
+            <ul class="footer-nav-items">
+              <li><a href="https://github.com/Senyuuuuuu" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+              <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+              <li><a href="mailto:benyaminnamtalashvili726@gmail.com">Email</a></li>
+              <li><a href="https://wa.me/639454836568" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-massive-wordmark" aria-hidden="true">
+        <span class="wordmark-orange">B</span><span class="wordmark-white">enyamin</span>
+      </div>
+
+      <div class="footer-technical-bar">
+        <div class="tech-bar-right" style="width: 100%; text-align: center;">
+          <span>&copy; 2026 · engineered by Benyamin Namtalashvili, not framer</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="footer-interactive-canvas.js?v=2.2.0"></script>
+  <script src="main.js?v=2.2.0"></script>
+  <script src="case-study-viewer.js?v=2.2.0"></script>
+</body>
+</html>

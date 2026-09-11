@@ -48,8 +48,39 @@
     const statusPill = card.querySelector('.bento-live-status-pill');
 
     let currentStep = 0;
-    let animTimer = null;
+    let activeTimers = [];
+    let isRunning = false;
     let isDestroyed = false;
+
+    function scheduleTimer(fn, delay) {
+      if (isDestroyed) return null;
+      const id = setTimeout(() => {
+        activeTimers = activeTimers.filter(t => t !== id);
+        if (isRunning && !isDestroyed) {
+          fn();
+        }
+      }, delay);
+      activeTimers.push(id);
+      return id;
+    }
+
+    function clearAllTimers() {
+      activeTimers.forEach(id => clearTimeout(id));
+      activeTimers = [];
+    }
+
+    function stopSimulation() {
+      isRunning = false;
+      clearAllTimers();
+      hideTooltip();
+      if (stage) stage.innerHTML = '';
+    }
+
+    function startSimulation() {
+      if (isRunning || isDestroyed) return;
+      isRunning = true;
+      runComponent1();
+    }
 
     // Helper: Move Cursor with smooth transition
     function moveCursor(x, y, duration = 0.5) {
@@ -75,7 +106,7 @@
 
     // COMPONENT 1: Primary Agent Glass Button (BtnPrimary.fig)
     function runComponent1() {
-      if (isDestroyed) return;
+      if (isDestroyed || !isRunning) return;
       stage.innerHTML = '';
       updateStatus('DRAWING FRAME', '#FF5E00');
 
@@ -83,7 +114,7 @@
       moveCursor(35, 30, 0.4);
       hideTooltip();
 
-      animTimer = setTimeout(() => {
+      scheduleTimer(() => {
         // Selection Box starts drawing
         const box = document.createElement('div');
         box.className = 'live-selection-box';
@@ -100,7 +131,7 @@
         stage.appendChild(box);
 
         // Drag cursor to expand box
-        setTimeout(() => {
+        scheduleTimer(() => {
           moveCursor(195, 78, 0.6);
           showTooltip('150 × 40 · R: 999', 195, 78);
           box.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
@@ -109,7 +140,7 @@
         }, 150);
 
         // Solidify into Glass Button
-        setTimeout(() => {
+        scheduleTimer(() => {
           box.classList.add('solidified');
           updateStatus('STYLING COMPONENT', '#3B82F6');
           box.innerHTML = `
@@ -123,28 +154,28 @@
         }, 850);
 
         // Cursor Clicks the Button to test interaction
-        setTimeout(() => {
+        scheduleTimer(() => {
           moveCursor(120, 58, 0.4);
-          setTimeout(() => {
+          scheduleTimer(() => {
             cursor.classList.add('cursor-clicking');
             const btn = box.querySelector('.live-comp-button');
             if (btn) btn.classList.add('is-active-btn');
             updateStatus('READY · VERIFIED', '#10B981');
             showTooltip('✓ Interactive State OK', 120, 58);
 
-            setTimeout(() => {
+            scheduleTimer(() => {
               cursor.classList.remove('cursor-clicking');
             }, 300);
           }, 450);
         }, 1400);
 
         // Transition to next component
-        setTimeout(() => {
+        scheduleTimer(() => {
           hideTooltip();
           box.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
           box.style.opacity = '0';
           box.style.transform = 'scale(0.95)';
-          setTimeout(runComponent2, 500);
+          scheduleTimer(runComponent2, 500);
         }, 3400);
 
       }, 500);
@@ -152,14 +183,14 @@
 
     // COMPONENT 2: Autonomous Neural Toggle Switch (AiSwitch.fig)
     function runComponent2() {
-      if (isDestroyed) return;
+      if (isDestroyed || !isRunning) return;
       stage.innerHTML = '';
       updateStatus('DRAWING COMPONENT', '#8B5CF6');
 
       moveCursor(40, 28, 0.4);
       hideTooltip();
 
-      animTimer = setTimeout(() => {
+      scheduleTimer(() => {
         const box = document.createElement('div');
         box.className = 'live-selection-box';
         box.style.left = '42px';
@@ -174,7 +205,7 @@
         `;
         stage.appendChild(box);
 
-        setTimeout(() => {
+        scheduleTimer(() => {
           moveCursor(185, 82, 0.6);
           showTooltip('142 × 48 · Pill', 185, 82);
           box.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
@@ -182,7 +213,7 @@
           box.style.height = '48px';
         }, 150);
 
-        setTimeout(() => {
+        scheduleTimer(() => {
           box.classList.add('solidified');
           updateStatus('CONFIGURING LOGIC', '#06B6D4');
           box.innerHTML = `
@@ -200,9 +231,9 @@
         }, 850);
 
         // Move to switch thumb & click to toggle ON
-        setTimeout(() => {
+        scheduleTimer(() => {
           moveCursor(160, 58, 0.45);
-          setTimeout(() => {
+          scheduleTimer(() => {
             cursor.classList.add('cursor-clicking');
             const track = document.getElementById('liveToggleTrack');
             const status = document.getElementById('liveToggleStatus');
@@ -214,19 +245,19 @@
             updateStatus('AUTONOMOUS ACTIVE', '#10B981');
             showTooltip('⚡ State: 1 (Enabled)', 160, 58);
 
-            setTimeout(() => {
+            scheduleTimer(() => {
               cursor.classList.remove('cursor-clicking');
             }, 300);
           }, 500);
         }, 1400);
 
         // Transition to next component
-        setTimeout(() => {
+        scheduleTimer(() => {
           hideTooltip();
           box.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
           box.style.opacity = '0';
           box.style.transform = 'scale(0.95)';
-          setTimeout(runComponent3, 500);
+          scheduleTimer(runComponent3, 500);
         }, 3400);
 
       }, 500);
@@ -234,14 +265,14 @@
 
     // COMPONENT 3: Live Sparkline Performance Metric Card (MetricCard.fig)
     function runComponent3() {
-      if (isDestroyed) return;
+      if (isDestroyed || !isRunning) return;
       stage.innerHTML = '';
       updateStatus('CREATING CHART', '#10B981');
 
       moveCursor(30, 26, 0.4);
       hideTooltip();
 
-      animTimer = setTimeout(() => {
+      scheduleTimer(() => {
         const box = document.createElement('div');
         box.className = 'live-selection-box';
         box.style.left = '32px';
@@ -256,7 +287,7 @@
         `;
         stage.appendChild(box);
 
-        setTimeout(() => {
+        scheduleTimer(() => {
           moveCursor(205, 84, 0.6);
           showTooltip('172 × 54 · AutoLayout', 205, 84);
           box.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
@@ -264,7 +295,7 @@
           box.style.height = '54px';
         }, 150);
 
-        setTimeout(() => {
+        scheduleTimer(() => {
           box.classList.add('solidified');
           updateStatus('CALCULATING DATA', '#FF5E00');
           box.innerHTML = `
@@ -285,26 +316,36 @@
         }, 850);
 
         // Move to inspect sparkline dot
-        setTimeout(() => {
+        scheduleTimer(() => {
           moveCursor(188, 46, 0.45);
           showTooltip('Peak 120fps · Zero Latency', 188, 46);
           updateStatus('OPTIMIZED 120FPS', '#10B981');
         }, 1500);
 
         // Loop back to Component 1
-        setTimeout(() => {
+        scheduleTimer(() => {
           hideTooltip();
           box.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
           box.style.opacity = '0';
           box.style.transform = 'scale(0.95)';
-          setTimeout(runComponent1, 500);
+          scheduleTimer(runComponent1, 500);
         }, 3400);
 
       }, 500);
     }
 
-    // Start Loop
-    runComponent1();
+    // Observer to only run simulation when card is in view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          startSimulation();
+        } else {
+          stopSimulation();
+        }
+      });
+    }, { threshold: 0.1 });
+
+    observer.observe(card);
   }
 
   if (document.readyState === 'loading') {

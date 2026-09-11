@@ -163,6 +163,7 @@
       if (combined.includes('ohmnibus')) return 'OHMNIBUS FLEET';
       if (combined.includes('qonek')) return 'QONEK APP';
       if (combined.includes('tugon')) return 'TUGON SERVICE';
+      if (combined.includes('ocean breeze') || combined.includes('ocean') || combined.includes('resort')) return 'OCEAN BREEZE RESORT';
       return 'CASE STUDY';
     }
 
