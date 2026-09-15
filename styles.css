@@ -10102,68 +10102,7 @@ a:active,
     visibility: visible !important;
   }
 
-  /* 2. Eliminate mobile GPU shader choke: replace heavy backdrop-filter on cards with high-contrast surfaces */
-  .portfolio-card-item,
-  .featured-card,
-  .bento-card,
-  .bento-pill-item,
-  .stack-mini-pill,
-  .story-card,
-  .testi-card,
-  .faq-item,
-  .faq-group-label,
-  .chip,
-  .filter-chip,
-  .stage-filter-chip,
-  .hero-rating-pill,
-  .nav-status-pill,
-  .contact-sec-tag,
-  .footer-avail-pill,
-  .btn-apple-secondary,
-  .btn-glass {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-
-  /* 3. Provide solid/semi-opaque high-speed fallback backgrounds for cards on mobile */
-  .portfolio-card-item,
-  .featured-card,
-  .bento-card {
-    background: #FFFFFF !important;
-  }
-
-  .story-card,
-  .testi-card {
-    background: rgba(255, 255, 255, 0.96) !important;
-  }
-
-  .faq-item {
-    background: #FFFFFF !important;
-  }
-
-  /* 4. Keep lightweight blur only on essential navigation controls */
-  .nav-island {
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-    background: rgba(255, 255, 255, 0.94) !important;
-  }
-
-  .mobile-nav-sheet {
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-  }
-
-  /* 5. Tame heavy multi-layer box shadows to speed up rasterization */
-  .portfolio-card-item,
-  .featured-card,
-  .bento-card,
-  .story-card,
-  .testi-card,
-  .faq-item {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
-  }
-
-  /* 6. Hardware-accelerated touch momentum */
+  /* 2. Hardware-accelerated touch momentum */
   html, body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: none;
