@@ -183,13 +183,16 @@
       });
       bodyItemPairs.length = 0;
 
+      stageContainer.style.pointerEvents = 'none';
+
       items.forEach((el, index) => {
         // Skip elements hidden via CSS display: none on mobile
         if (window.getComputedStyle(el).display === 'none' || el.offsetParent === null) {
           return;
         }
 
-        el.style.touchAction = 'none';
+        const isMobDevice = window.innerWidth <= 768;
+        el.style.touchAction = isMobDevice ? 'pan-y' : 'none';
         el.style.pointerEvents = 'auto';
         el.style.transform = 'none'; // Temporarily clear transforms to measure natural CSS box
 
@@ -421,6 +424,25 @@
         });
       }, { threshold: 0.05 }).observe(heroSection);
     }
+
+    // Pause physics updates during mobile touch scroll to release 100% CPU for native momentum
+    let scrollPauseTimer = null;
+    let isScrollingPaused = false;
+    window.addEventListener('scroll', () => {
+      if (window.innerWidth <= 768 && isHeroVisible) {
+        if (!isScrollingPaused) {
+          isScrollingPaused = true;
+          Runner.stop(runner);
+        }
+        clearTimeout(scrollPauseTimer);
+        scrollPauseTimer = setTimeout(() => {
+          if (isHeroVisible) {
+            Runner.run(runner, engine);
+            isScrollingPaused = false;
+          }
+        }, 120);
+      }
+    }, { passive: true });
 
     // 8. Responsive Dynamic Resize & Orientation Re-calibration
     let resizeTimer = null;

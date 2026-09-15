@@ -249,16 +249,17 @@
           const ph = body.pillH;
           const pr = body.pillRadius;
 
-          // Tactile elevation on drag
+          const isMobDevice = width < 768;
+          // Tactile elevation on drag (shadow blur disabled on mobile to eliminate GPU rasterization bottlenecks)
           if (body.isBeingDragged) {
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-            ctx.shadowBlur = 26;
-            ctx.shadowOffsetY = 12;
+            ctx.shadowColor = isMobDevice ? 'transparent' : 'rgba(0, 0, 0, 0.7)';
+            ctx.shadowBlur = isMobDevice ? 0 : 26;
+            ctx.shadowOffsetY = isMobDevice ? 0 : 12;
             ctx.scale(1.1, 1.1);
           } else {
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.42)';
-            ctx.shadowBlur = 14;
-            ctx.shadowOffsetY = 6;
+            ctx.shadowColor = isMobDevice ? 'transparent' : 'rgba(0, 0, 0, 0.42)';
+            ctx.shadowBlur = isMobDevice ? 0 : 14;
+            ctx.shadowOffsetY = isMobDevice ? 0 : 6;
           }
 
           // Draw capsule or squircle
@@ -344,6 +345,30 @@
     }
 
     setupEngine();
+
+    // Pause physics CTA during mobile touch scrolling to guarantee 60fps/120fps native scroll performance
+    let scrollPauseTimer = null;
+    let isScrollingPaused = false;
+    window.addEventListener('scroll', () => {
+      if (window.innerWidth <= 768 && isCtaVisible) {
+        if (!isScrollingPaused) {
+          isScrollingPaused = true;
+          if (runner) Runner.stop(runner);
+          if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+        }
+        clearTimeout(scrollPauseTimer);
+        scrollPauseTimer = setTimeout(() => {
+          if (isCtaVisible) {
+            if (runner) Runner.run(runner, engine);
+            if (!rafId) rafId = requestAnimationFrame(renderLoop);
+            isScrollingPaused = false;
+          }
+        }, 120);
+      }
+    }, { passive: true });
 
     // Debounced Resize Observer
     let resizeTimer;

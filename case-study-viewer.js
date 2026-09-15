@@ -117,31 +117,35 @@
     let isHoveringZoomable = false;
     let isBadgeActive = false;
 
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    }, { passive: true });
+    const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
 
-    function renderCursorBadge() {
-      badgeX += (mouseX - badgeX) * 0.18;
-      badgeY += (mouseY - badgeY) * 0.18;
+    if (hasFinePointer) {
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      }, { passive: true });
 
-      if (cursorBadge) {
-        cursorBadge.style.left = `${badgeX}px`;
-        cursorBadge.style.top = `${badgeY}px`;
+      function renderCursorBadge() {
+        badgeX += (mouseX - badgeX) * 0.18;
+        badgeY += (mouseY - badgeY) * 0.18;
 
-        if (isHoveringZoomable && !isBadgeActive && !lightbox.classList.contains('open')) {
-          cursorBadge.classList.add('active');
-          isBadgeActive = true;
-        } else if ((!isHoveringZoomable || lightbox.classList.contains('open')) && isBadgeActive) {
-          cursorBadge.classList.remove('active');
-          isBadgeActive = false;
+        if (cursorBadge) {
+          cursorBadge.style.left = `${badgeX}px`;
+          cursorBadge.style.top = `${badgeY}px`;
+
+          if (isHoveringZoomable && !isBadgeActive && !lightbox.classList.contains('open')) {
+            cursorBadge.classList.add('active');
+            isBadgeActive = true;
+          } else if ((!isHoveringZoomable || lightbox.classList.contains('open')) && isBadgeActive) {
+            cursorBadge.classList.remove('active');
+            isBadgeActive = false;
+          }
         }
-      }
 
+        requestAnimationFrame(renderCursorBadge);
+      }
       requestAnimationFrame(renderCursorBadge);
     }
-    requestAnimationFrame(renderCursorBadge);
 
     // 4. Discover & Register All Showcase Images Across Case Study Pages
     let galleryItems = [];

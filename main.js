@@ -415,7 +415,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2. LENIS SMOOTH SCROLLING ENGINE (Synchronized with GSAP)
   // =========================================================================
   let lenis;
-  if (typeof Lenis !== 'undefined' && !prefersReducedMotion) {
+  const isTouchScreen = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+  if (typeof Lenis !== 'undefined' && !prefersReducedMotion && !isTouchScreen) {
     lenis = new Lenis({
       duration: 0.95,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -681,7 +682,7 @@ document.addEventListener('DOMContentLoaded', () => {
       {
         selector: '.contact-blueprint-section',
         header: '.contact-hero-header',
-        children: '.contact-card, .blueprint-card',
+        children: null, // Form card remains permanently active and visible without scroll delay
         stagger: 0.08
       }
     ];
@@ -1076,6 +1077,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (heroVideo) {
     heroVideo.muted = true;
     let videoSourcesLoaded = false;
+    const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window && window.innerWidth <= 1024);
+    const prefersDataSaver = navigator.connection && navigator.connection.saveData;
 
     const loadAndPlayHeroVideo = () => {
       if (!videoSourcesLoaded) {
@@ -1099,23 +1102,33 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    // Lazy load video stream with 300px lookahead margin & pause when offscreen
-    if ('IntersectionObserver' in window) {
-      const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            loadAndPlayHeroVideo();
-          } else {
-            if (videoSourcesLoaded) {
-              heroVideo.pause();
+    // On mobile devices or data saver, don't hog 56.5MB RAM/bandwidth on initial load
+    // Instead, show high-res poster and only load when user interacts or clicks play
+    if (!isMobileDevice && !prefersDataSaver) {
+      if ('IntersectionObserver' in window) {
+        const videoObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              loadAndPlayHeroVideo();
+            } else {
+              if (videoSourcesLoaded) {
+                heroVideo.pause();
+              }
             }
-          }
-        });
-      }, { rootMargin: '300px 0px', threshold: 0.08 });
+          });
+        }, { rootMargin: '0px 0px', threshold: 0.15 });
 
-      videoObserver.observe(heroVideo);
+        videoObserver.observe(heroVideo);
+      } else {
+        loadAndPlayHeroVideo();
+      }
     } else {
-      loadAndPlayHeroVideo();
+      // On mobile: load only on explicit user tap
+      heroVideo.addEventListener('click', () => {
+        if (!videoSourcesLoaded) {
+          loadAndPlayHeroVideo();
+        }
+      }, { once: true });
     }
 
     if (videoSoundBtn) {
@@ -1145,14 +1158,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const rowBottom = document.getElementById('storiesRowBottom');
     if (!rowTop || !rowMiddle || !rowBottom || typeof gsap === 'undefined') return;
 
-    // Clone groups in all three rows to guarantee endless, seamless looping
+    const isMobile = window.innerWidth <= 768;
+
+    // Clone groups to guarantee endless looping (clone 1x on mobile to save 20+ heavy DOM cards and RAM)
     [rowTop, rowMiddle, rowBottom].forEach(row => {
       const group = row.querySelector('.stories-track-group');
       if (group) {
         const clone1 = group.cloneNode(true);
-        const clone2 = group.cloneNode(true);
         row.appendChild(clone1);
-        row.appendChild(clone2);
+        if (!isMobile) {
+          const clone2 = group.cloneNode(true);
+          row.appendChild(clone2);
+        }
       }
     });
 
@@ -1166,6 +1183,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const getWidthMiddle = () => groupMiddle.offsetWidth;
       const getWidthBottom = () => groupBottom.offsetWidth;
 
+      // Start paused; IntersectionObserver starts them only when scrolled into view
       // Row 1 (Top): Pans slowly to the left
       const tweenTop = gsap.fromTo(rowTop,
         { x: 0 },
@@ -1173,7 +1191,8 @@ document.addEventListener('DOMContentLoaded', () => {
           x: () => -getWidthTop(),
           duration: 38,
           ease: "none",
-          repeat: -1
+          repeat: -1,
+          paused: true
         }
       );
 
@@ -1184,7 +1203,8 @@ document.addEventListener('DOMContentLoaded', () => {
           x: 0,
           duration: 44,
           ease: "none",
-          repeat: -1
+          repeat: -1,
+          paused: true
         }
       );
 
@@ -1195,7 +1215,8 @@ document.addEventListener('DOMContentLoaded', () => {
           x: () => -getWidthBottom(),
           duration: 36,
           ease: "none",
-          repeat: -1
+          repeat: -1,
+          paused: true
         }
       );
 

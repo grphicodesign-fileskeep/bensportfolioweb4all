@@ -10055,7 +10055,7 @@ a:active,
 
 /* ==========================================================================
    SECTION-BY-SECTION GSAP SCROLL ANIMATION ACCELERATION
-   Compositor-thread isolation · Zero-jank transforms · Backface visibility
+   Lightweight GPU compositing · Zero memory leaks · High frame rate
    ========================================================================== */
 .hero-section,
 .featured-projects-section,
@@ -10065,14 +10065,23 @@ a:active,
 .cta-banner-section,
 .floating-footer-wrapper,
 .contact-blueprint-section {
-  will-change: transform, opacity;
-  transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
-/* Mobile Compositor Optimization & Vanishing Prevention */
+/* ==========================================================================
+   MOBILE & SMALL DEVICE ULTRA-HIGH-PERFORMANCE & LOW-RAM ENGINE
+   Disables multi-pass GPU blur shaders on cards, drops RAM consumption,
+   eliminates compositor bottlenecks and guarantees smooth 60fps/120fps scrolling
+   ========================================================================== */
 @media (max-width: 768px) {
+  /* 1. Global RAM release: remove forced GPU backing store allocations */
+  *,
+  *::before,
+  *::after {
+    will-change: auto !important;
+  }
+
   .hero-section,
   .featured-projects-section,
   .capabilities-bento-section,
@@ -10084,11 +10093,80 @@ a:active,
   .portfolio-card-item,
   .bento-card,
   .testi-card,
-  .faq-item {
+  .faq-item,
+  .story-card,
+  .featured-card {
     will-change: auto !important;
     backface-visibility: visible !important;
     -webkit-backface-visibility: visible !important;
     visibility: visible !important;
+  }
+
+  /* 2. Eliminate mobile GPU shader choke: replace heavy backdrop-filter on cards with high-contrast surfaces */
+  .portfolio-card-item,
+  .featured-card,
+  .bento-card,
+  .bento-pill-item,
+  .stack-mini-pill,
+  .story-card,
+  .testi-card,
+  .faq-item,
+  .faq-group-label,
+  .chip,
+  .filter-chip,
+  .stage-filter-chip,
+  .hero-rating-pill,
+  .nav-status-pill,
+  .contact-sec-tag,
+  .footer-avail-pill,
+  .btn-apple-secondary,
+  .btn-glass {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* 3. Provide solid/semi-opaque high-speed fallback backgrounds for cards on mobile */
+  .portfolio-card-item,
+  .featured-card,
+  .bento-card {
+    background: #FFFFFF !important;
+  }
+
+  .story-card,
+  .testi-card {
+    background: rgba(255, 255, 255, 0.96) !important;
+  }
+
+  .faq-item {
+    background: #FFFFFF !important;
+  }
+
+  /* 4. Keep lightweight blur only on essential navigation controls */
+  .nav-island {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+  }
+
+  .mobile-nav-sheet {
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+  }
+
+  /* 5. Tame heavy multi-layer box shadows to speed up rasterization */
+  .portfolio-card-item,
+  .featured-card,
+  .bento-card,
+  .story-card,
+  .testi-card,
+  .faq-item {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+  }
+
+  /* 6. Hardware-accelerated touch momentum */
+  html, body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
   }
 }
 

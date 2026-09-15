@@ -10,6 +10,12 @@
   'use strict';
 
   function initFooterInteractiveCanvas() {
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+    if (isTouchDevice) {
+      // On touch devices without hover cursors, skip creating 1,200 interactive dot objects to conserve RAM & battery
+      return;
+    }
+
     const footers = document.querySelectorAll('.designer-footer');
     if (!footers || footers.length === 0) return;
 
